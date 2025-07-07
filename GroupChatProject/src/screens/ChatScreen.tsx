@@ -43,7 +43,7 @@ export default function ChatScreen({ navigation }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const currentUserId = auth.currentUser?.uid;
 
-  // Header logout button
+  
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
