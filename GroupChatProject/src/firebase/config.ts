@@ -1,15 +1,9 @@
 import { initializeApp, FirebaseApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
 import { getFirestore, Firestore } from "firebase/firestore";
+import analytics from '@react-native-firebase/analytics';
 
-const firebaseConfig: {
-  apiKey: string;
-  authDomain: string;
-  projectId: string;
-  storageBucket: string;
-  messagingSenderId: string;
-  appId: string;
-} = {
+const firebaseConfig = {
   apiKey: "AIzaSyBsutiKz7HglwcRzwW9Bbb9-4gYNZBP0Og",
   authDomain: "group-chat-434f0.firebaseapp.com",
   projectId: "group-chat-434f0",
@@ -22,4 +16,4 @@ const app: FirebaseApp = initializeApp(firebaseConfig);
 const auth: Auth = getAuth(app);
 const db: Firestore = getFirestore(app);
 
-export { auth, db };
+export { auth, db, analytics };

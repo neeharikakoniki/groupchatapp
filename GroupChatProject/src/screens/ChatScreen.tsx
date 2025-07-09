@@ -22,6 +22,8 @@ import {
 } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import analytics from '@react-native-firebase/analytics';
+import * as Keychain from 'react-native-keychain';
 
 interface Message {
   id: string;
@@ -43,7 +45,6 @@ export default function ChatScreen({ navigation }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const currentUserId = auth.currentUser?.uid;
 
-  
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -51,6 +52,7 @@ export default function ChatScreen({ navigation }: Props) {
           title="Logout"
           onPress={async () => {
             try {
+              await Keychain.resetGenericPassword(); 
               await signOut(auth);
               navigation.replace('Login');
             } catch (err) {
@@ -77,7 +79,6 @@ export default function ChatScreen({ navigation }: Props) {
     return () => unsubscribe();
   }, []);
 
-
   const sendMessage = async () => {
     if (message.trim().length === 0) return;
     try {
@@ -87,6 +88,13 @@ export default function ChatScreen({ navigation }: Props) {
         userId: auth.currentUser?.uid,
         userName: auth.currentUser?.email || null,
       });
+
+      await analytics().logEvent('message_sent', {
+        userId: auth.currentUser?.uid,
+        userName: auth.currentUser?.email,
+        textLength: message.length,
+      });
+
       setMessage('');
     } catch (error) {
       console.log('Error sending message: ', error);
